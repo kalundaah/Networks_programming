@@ -1,101 +1,101 @@
-S/No	Title	Authors	ISBN	Publisher	Date of publication
-1	Damsel in Distress, A	Constance	3kKGuN	Twitterbridge	10/27/2019
-2	Lawless Frontier, The	Karlik	7oQVg0	Centidel	6/27/2022
-3	Grey Gardens	Edita	7nPArA	Skyndu	10/23/2022
-4	Brewster's Millions	Bertha	5aDTbF	Skinte	6/30/2010
-5	Next Stop Wonderland	Joelie	8xKW6A	Agivu	11/7/2020
-6	Miss Firecracker	Koenraad	2aSt93	Avamm	11/28/2019
-7	Devil's Trap, The (Dáblova past)	Merrel	2lXneN	Skivee	3/28/2012
-8	Dog's Life, A	Barton	2uDlaU	Zoomdog	8/26/2011
-9	Resistance	Yvette	4aGN1V	Demimbu	9/15/2023
-10	Theremin: An Electronic Odyssey	Kiley	9hZ4pO	Agimba	12/6/2021
-11	Parent Trap, The	Paquito	6rCTs1	Jabberstorm	9/14/2020
-12	Dream Wife	Denny	6eGvuQ	Brainbox	10/1/2012
-13	Silver Streak	Cher	6kMZqU	Eare	4/19/2017
-14	It's in the Water	Denise	5uN0jV	Voonder	8/30/2020
-15	Shooting Dogs (a.k.a. Beyond the Gates)	Theresa	9yRUsE	Rhycero	1/22/2015
-16	Australian Atomic Confessions	Toddie	6uRwh1	Kwideo	4/10/2019
-17	King Kong vs. Godzilla (Kingukongu tai Gojira)	Miquela	5eCPcE	Divanoodle	11/23/2015
-18	Hotel Hell Vacation	Lilah	3iBje8	Gigabox	6/9/2014
-19	Invincible	Shep	6bZX87	Photospace	11/21/2016
-20	Love and Other Troubles	Tamiko	7aTvwP	Blogspan	9/30/2018
-21	I Bought a Vampire Motorcycle	Franzen	8aDu3S	Dynabox	4/11/2019
-22	My Mom Is a Character (Minha Mãe é uma Peça: O Filme)	Hewitt	1cZsg6	Jabbersphere	1/18/2023
-23	Hangman's Curse	Reinold	3lKJ2O	Tagcat	8/21/2022
-24	Laputa: Castle in the Sky (Tenkû no shiro Rapyuta)	Van	0zFn0A	Tagcat	5/24/2016
-25	Space Station 76	Wynn	2rHgw6	Tagcat	4/10/2018
-26	My Fellow Americans	Rouvin	7zSpb8	Topiczoom	4/10/2020
-27	Other Boleyn Girl, The	Esme	8fXiaO	Fatz	12/27/2023
-28	Waiting Game, The	Leanna	5jEyv1	Trupe	11/1/2020
-29	Blackmailed	Domingo	4pCPp1	Ooba	9/20/2013
-30	Vasermil	Quincey	4nPqvW	Voolia	6/13/2020
-31	Bells Are Ringing	Lemar	5mTfgT	Aimbo	2/2/2012
-32	Plaza Suite	Marwin	3kT3rH	Pixoboo	8/16/2018
-33	Marva Collins Story, The	Sheila	1lTHx9	Trunyx	9/18/2011
-34	The Vixen	Tom	7kGid5	Minyx	7/28/2018
-35	Great White Hype, The	Gregory	2sJO4A	Myworks	3/5/2011
-36	Stranded: I've Come from a Plane That Crashed on the Mountains	Marian	5jPiaM	Skippad	4/29/2020
-37	Bamboozled	Richart	9nZSoC	Browsezoom	2/1/2024
-38	Summer Magic	Lyndsey	9oSvgY	Yombu	9/12/2016
-39	Amityville Curse, The	Vanessa	7aGfn2	LiveZ	1/20/2017
-40	Ricky & Barabba	Amelie	0gLsrO	Dabjam	5/26/2012
-41	Ascent, The (Voskhozhdeniye)	Husain	8qE673	Skivee	11/2/2010
-42	Gigli	Sigfrid	8jW8eY	Dabjam	5/15/2023
-43	Three Stooges in Orbit, The	Ernest	6lDXpU	Babbleblab	11/16/2011
-44	Boy	Omero	9hMVzV	Yodo	6/12/2010
-45	Tillbaka till Bromma	Torre	7tGWdN	Skalith	8/7/2023
-46	Container	Clarance	0sEtp6	Fadeo	1/22/2021
-47	Mr. Moto's Gamble	Waylin	8vM78L	Lazz	5/14/2017
-48	Cat and Dog	Helaina	1uBlx0	Tagtune	6/20/2011
-49	Best Foot Forward	Virge	3vDb7N	Blognation	12/22/2011
-50	Scarface	Bordie	0nSWkF	Kwilith	1/28/2013
-51	100 Men and a Girl (One Hundred Men and a Girl)	Red	2eP6fH	Fliptune	8/17/2013
-52	Captive Women (1000 Years from Now) (3000 A.D.)	Odo	3tG3l3	Skyble	1/2/2014
-53	It's a Boy Girl Thing	Caterina	5zM19V	Edgeify	3/21/2019
-54	Random Harvest	Adelind	4fNht7	Mudo	5/31/2016
-55	Murder on a Sunday Morning (Un coupable idéal)	Marian	9mBxf9	Meezzy	1/13/2020
-56	West Is West	Katrinka	7yMc9B	Izio	3/1/2022
-57	Whitewash	Adelheid	5eNPyH	Gabcube	11/27/2010
-58	Ryan	Burgess	6rNX3C	Yodo	10/7/2017
-59	Waiting Women (Kvinnors väntan)	Barbette	5qZCfE	Snaptags	7/10/2012
-60	Uninvited, The	Lurline	4mEGh4	Twitternation	1/14/2024
-61	Too Many Husbands	Timotheus	9jITs1	Plajo	3/25/2021
-62	Nowhere to Run	Alvinia	0fZal1	Devpoint	11/2/2021
-63	Things to Come	Fidole	1aPbxE	Browsetype	12/5/2023
-64	Heroine	Waldemar	4iNJx2	Quimm	8/27/2015
-65	Urban Justice	Valle	6vGp4U	Cogidoo	9/25/2023
-66	Passionada	Bob	8bWR0D	Rhycero	5/7/2020
-67	Stone of Destiny	Patsy	3fKgvM	Jayo	9/1/2012
-68	The Hunting Ground	Cherie	7cSreY	Edgeify	11/25/2013
-69	200 Motels	Reinald	5eYDoE	Cogibox	6/13/2020
-70	Undercurrent	Nichole	3dPRr6	Mynte	9/3/2013
-71	Dance Flick	Reinhard	1yBM6U	Wordware	5/22/2020
-72	Common	Stephan	5cYdzN	Zoovu	2/22/2011
-73	Brides (Nyfes)	Alida	7lEXbU	Kare	1/20/2017
-74	Damsel in Distress, A	Arley	0kQFsN	Kwinu	7/9/2013
-75	Higher and Higher	Jacquenetta	6hE0vJ	Skiptube	11/11/2014
-76	Henry Kissinger: Secrets of a Superpower (Henry Kissinger - Geheimnisse einer Supermacht)	Leena	7aDvs6	Cogidoo	10/14/2020
-77	Limelight	Afton	3qVXk6	Eamia	10/23/2011
-78	Two Women	Davey	5cCU9G	Tagfeed	1/21/2012
-79	And While We Were Here	Onofredo	5iUkoC	Yodoo	11/12/2021
-80	Frogs	Rickey	6fUrsN	Youspan	8/23/2020
-81	Winter's Bone	Karney	9mFI62	Mycat	8/11/2010
-82	Eddie Murphy Delirious	Jerrome	6wEh5U	Podcat	3/28/2020
-83	And the Band Played On	Ardenia	0fR4y5	Wikizz	9/17/2018
-84	Red-Headed Woman	Giacinta	2wQsuK	Tagchat	8/22/2015
-85	High Society	Tabbie	4vAm44	Jabberstorm	8/2/2019
-86	The Dark Valley	Amalea	5iGU68	Lazzy	4/3/2013
-87	The Voice of the Moon	Roy	2jPmd2	Gigashots	1/21/2022
-88	Shutter	Aurlie	5lXOcI	Buzzdog	9/21/2011
-89	Taste the Blood of Dracula	Maryl	6dD8p9	Edgewire	9/2/2019
-90	Behind the Screen	Glenden	3eXz3S	Jabbersphere	9/28/2016
-91	Very Potter Musical, A	Elora	0kRCoE	Kare	7/7/2010
-92	My Name Is Julia Ross	Tades	7rZhaI	Mycat	9/14/2015
-93	Girl with the Red Scarf, The (Selvi boylum, al yazmalim)	Mackenzie	8aRNiQ	Wikizz	10/24/2017
-94	Good Marriage, A (Beau mariage, Le)	Anallise	8fYuwR	Tavu	12/15/2013
-95	Gendernauts	Marianne	5kQ8o4	Mynte	6/17/2016
-96	Antichrist	Suzanna	3oPVs8	Youfeed	6/8/2021
-97	Nothing Like the Holidays	Clemmie	0nCjqS	Chatterbridge	11/10/2017
-98	Clockers	Brady	6qXR3Y	Latz	5/2/2016
-99	My Name is Juani (Yo soy la Juani)	Maggi	5kMklY	Skiptube	5/10/2023
-100	My Brilliant Career	Xerxes	6pWPeM	Agimba	2/7/2023
+S/No	Title	Authors	ISBN	Publisher	Date of publication	Price
+1	Zombie Holocaust (a.k.a. Doctor Butcher M.D.) (Zombi Holocaust)	Carlyn	2eXKs1	Quimba	7/9/2019	3395
+2	The Brides of Fu Manchu	Chiquita	3fRX6E	Quatz	7/21/2013	3119
+3	Yank in the R.A.F., A	Abra	6fM1qF	Wikivu	11/17/2011	2295
+4	Big Business	Chaim	9kFfg8	Yacero	1/29/2023	4949
+5	Pelican Brief, The	Launce	1lK3hU	Youopia	5/16/2023	3812
+6	Mystery Street	Artair	0bFdbV	Reallinks	4/13/2019	1084
+7	Bad Boys II	Irwin	9aA6j5	Linklinks	1/25/2014	2630
+8	The Mountain of the Cannibal God	Frans	8kTmt9	Twinte	1/20/2012	2528
+9	Saw II	Belvia	3bXG7R	Chatterpoint	11/10/2022	3364
+10	Man Who Copied, The (Homem Que Copiava, O)	Olympie	7rYQ3Y	Edgepulse	12/29/2011	4119
+11	Story of Three Loves, The	Glori	8pYA17	Dabshots	8/22/2012	1905
+12	First Deadly Sin, The	Liliane	2kX475	Minyx	2/9/2013	2481
+13	Sitting Bull	Evin	5rVbq5	Chatterbridge	2/28/2012	4940
+14	Playground	Isaiah	5jHTv8	Tagcat	4/11/2010	1331
+15	I Drink Your Blood	Gilles	5iA9aU	Kwilith	5/20/2014	2754
+16	Expelled	Wallache	4wVPmK	Topicshots	10/30/2022	2052
+17	Messengers, The	Sher	0sXhk3	Eimbee	7/22/2022	4676
+18	Which Way to the Front?	Lisbeth	0sGqs5	Skivee	1/7/2024	2917
+19	Nine Lives of Fritz the Cat, The	Johanna	5tHDgE	Roodel	9/12/2012	4815
+20	Stealing Time (a.k.a. Rennie's Landing)	Roobbie	8mCi76	Fatz	3/29/2017	2124
+21	Fireproof	Stephannie	6cNV0F	Kwimbee	10/26/2018	2771
+22	Quantum of Solace	Jodie	2dDajW	Zazio	5/24/2017	1964
+23	The Great Alligator	Bear	5vRlz6	Dynabox	6/9/2016	4237
+24	American Astronaut, The	Janot	4fOF1Z	Edgeclub	7/7/2018	3903
+25	Great Magician, The (Daai mo seut si)	Anna-diane	4xQQqY	Edgewire	3/20/2017	1187
+26	Fever	Meriel	1wWh2J	Lajo	5/10/2011	4136
+27	Private Detective 62	Michaella	2jR8iE	Zooxo	5/30/2016	2256
+28	Line of Sight	Ethyl	3rJa0T	Oyoloo	10/16/2014	1102
+29	House on 92nd Street, The	Zacharia	3sIAtO	Gevee	11/22/2013	4020
+30	Married to It	Merv	7ySp0K	Kayveo	5/27/2018	1911
+31	Barchester Chronicles, The	Shanan	7bRnfM	Yombu	6/28/2018	1757
+32	Out of the Blue (Aramoana)	Isabelita	2lKfnI	Riffpedia	11/26/2017	1783
+33	Wizard of Oz, The	Benyamin	9uJdfD	Roomm	2/18/2022	3735
+34	Living Wake, The	Brianna	2fVIyH	Nlounge	5/14/2011	3931
+35	Something from Nothing: The Art of Rap	Maxi	1hZIaP	Yambee	2/11/2019	1957
+36	Superpower	Merry	1rIRdW	Fatz	8/3/2015	3820
+37	Blackjack	Gusta	7eJd2N	Cogilith	2/16/2018	2841
+38	Guts (Agallas)	Norby	5jFllH	Fliptune	9/7/2021	1123
+39	Monster	Reuben	9aRu3E	Kaymbo	10/8/2016	3452
+40	Seaside (Bord de Mer)	Keslie	1bHRxE	Geba	12/22/2011	2173
+41	Mary and Martha	Valida	8tD4sP	Mydo	7/26/2019	1083
+42	Deadly Tower, The	Karina	4zS400	Browsebug	4/12/2010	3818
+43	Stars Look Down, The	Marcelline	4wBA2J	Brainverse	8/16/2020	3991
+44	Urgh! A Music War	Guthrie	5hYJ80	Jaloo	2/12/2023	4439
+45	Paradine Case, The	Beniamino	4hZwcK	Eidel	3/19/2017	2026
+46	Sharknado 2: The Second One	Raffaello	0bZy7W	Quinu	4/24/2023	1565
+47	Peyton Place	Warden	8nSv0H	Quinu	9/25/2021	4118
+48	Hard to Kill	Garek	8oOg0B	Skyba	5/29/2017	4892
+49	Dragon Ball Z: Cooler's Revenge (Doragon bôru Z 5: Tobikkiri no saikyô tai saikyô)	Kayne	1xKYg5	Lajo	10/12/2021	4691
+50	Strategic Air Command	Flore	8sU34D	Meetz	4/3/2013	4485
+51	Back In Action	Conway	2aAz2P	Jaxspan	3/6/2016	1609
+52	Manhattan Project, The	Winfield	3iBt31	Jabbersphere	4/14/2023	1459
+53	Trouble Bound	Tildie	7kZe9V	Oyondu	10/20/2021	3536
+54	Amber Alert 	Marga	0pPfo8	Meembee	10/10/2022	1808
+55	Alive Inside	Petra	5mVxwU	Feedfish	1/12/2020	2368
+56	Last Run, The	Zea	0iIOt6	Camido	2/22/2024	4262
+57	Brewster's Millions	Joceline	6rAxj3	Tagcat	4/12/2020	3655
+58	Work of Director Michel Gondry, The	Vanda	3mMIo7	Jabberbean	1/26/2018	3803
+59	Shout, The	Archibald	5pHAkN	Eimbee	11/7/2015	2201
+60	800 Bullets (800 Balas)	Silvan	3dILw5	Zava	11/26/2017	2270
+61	Magnificent Yankee, The	Doyle	6pYb0X	Eadel	8/3/2023	3315
+62	What Have They Done to Your Daughters?	Loutitia	1fJ9vZ	Wikizz	9/16/2017	1025
+63	Last Mogul, The	Balduin	2rGjaI	Vipe	2/25/2012	2421
+64	Toronto Stories	Emiline	1tUNt1	Feedfire	5/7/2019	3266
+65	Curse of Chucky (Child's Play 6)	Evelyn	6rAXwW	Yamia	1/20/2013	3490
+66	Django	Rhonda	3hA19D	Mudo	5/31/2019	1233
+67	Welcome to the Rileys	Jonathon	7lLTo0	Jabberstorm	11/26/2019	1067
+68	Cost of Oil: Voices from the Arctic, The	Andrus	7gCtb1	Jaloo	2/2/2024	1423
+69	Man's Best Friend	Drusy	5uASyX	Camimbo	4/25/2012	3530
+70	A Blank on the Map	Correy	5xYUx7	Cogidoo	9/12/2015	2584
+71	Killing Kasztner	Agna	9xPGyZ	Aimbu	7/7/2021	2073
+72	American Ninja 2: The Confrontation	Vina	8tNn0B	Jaxnation	3/9/2021	1501
+73	Bad Company	Gustav	6iTr88	Yoveo	1/27/2019	3392
+74	Temp, The	Jonell	4wVK3B	Oyoloo	9/20/2021	3529
+75	Big Bounce, The	Derrick	9xXtjQ	Quaxo	3/4/2011	4121
+76	Confessions of a Superhero	Olvan	9yOF30	Skimia	9/27/2011	4823
+77	Flawless	Archer	6pRMpF	Rhynyx	8/20/2022	3135
+78	Cloudland	Silvain	3tPUdN	Realbuzz	5/13/2018	4405
+79	Last Wedding, The (Kivenpyörittäjän kylä)	Adriaens	4fEPoM	Mydo	10/25/2016	3187
+80	Amistad	Celia	4gGTw6	Fivespan	10/5/2019	3028
+81	The Brain	Townie	0pDokF	Mydeo	9/10/2011	3450
+82	Bitter Sweet	Ricoriki	4pJah2	Zooveo	9/22/2022	4145
+83	Howard the Duck	Che	2xAppF	Topiclounge	5/26/2010	3829
+84	Sheriff and the Satellite Kid, The	Conny	0dRXqW	Skiba	8/2/2022	3674
+85	Palermo Shooting	Miguela	9hGl06	Jazzy	4/4/2015	2700
+86	Don't Go Near the Water	Leonhard	4bHGyD	Livepath	12/26/2021	1883
+87	City of God (Cidade de Deus)	Becka	1wKni6	Voonyx	1/9/2023	4203
+88	Kevin Smith: Too Fat For 40	Welby	9gB49E	Fiveclub	12/27/2014	1756
+89	Lamp in the Dark; The Untold History of the Bible, A	Miranda	7eBp8I	Flipopia	11/8/2023	4102
+90	Superman IV: The Quest for Peace	Rem	9aAX3E	Quire	10/23/2011	1898
+91	My Brother the Devil	Wilona	6kS4zO	Layo	7/8/2015	4163
+92	Clara's Heart	Cassie	8dGPg7	Jabberbean	10/25/2013	2511
+93	Grave Halloween	Athena	5qPzyH	Devify	12/28/2015	4719
+94	Jonny Vang	Rob	5kOl70	Meedoo	8/6/2010	1475
+95	She Had to Say Yes	Drucy	6gPS9F	Browsebug	8/3/2021	3829
+96	Rapa Nui	Orbadiah	5zIobL	Yakijo	3/2/2016	4748
+97	Play the Game	Lurleen	8aUFnA	Divape	6/5/2020	2876
+98	Priceless (Hors de prix)	Ashlen	6kX6nU	Twimbo	7/31/2022	4587
+99	Megamind	Stavros	0fHMvE	Oyoloo	9/3/2012	2433
+100	Romy and Michele: In the Beginning	Mariam	6aGGdZ	Katz	3/7/2019	2057
