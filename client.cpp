@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     while (true) {
         cout << "Enter a number (or type 'stop' to quit): ";
         string input;
-        cin >> input;
+        getline(cin, input);
 
         // Send input number to server
         send(clientSocket, input.c_str(), strlen(input.c_str()), 0); 
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         if(input == "2" || input == "3" || input == "4"){
             cout << "Enter the book you wish to find" << endl;
             string query;
-            cin >> query;
+            getline(cin, query);
             const char* responseMsg = query.c_str();
             send(clientSocket, responseMsg, strlen(responseMsg), 0); 
             // break;
