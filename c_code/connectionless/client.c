@@ -1,15 +1,10 @@
-// C
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-// POSIX operating system API - provides the read, write, fork, exit, exec functions
 #include <unistd.h>
-
-// Types
-#include <sys/types.h> // UNIX data types
-#include <sys/socket.h> // Socket related data types
-#include <netinet/in.h> // Internet address family structures and constants
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <ctype.h>
@@ -20,56 +15,50 @@ void checkMemoryAllocation(void *ptr);
 
 int main(int argc, char const *argv[]) {
     // Get Client Host and Port
-    if(argc != 3) {
+    if (argc != 3) {
         fprintf(stderr, "(Failed) usage: %s <host> <port>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
-    char *SERVER_HOSTNAME;
-    SERVER_HOSTNAME = strdup(argv[1]);
+    char *SERVER_HOSTNAME = strdup(argv[1]);
     int SERVER_PORT = atoi(argv[2]);
 
     // Socket
     int client_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if(client_fd < 0) {
+    if (client_fd < 0) {
         perror("Creation of client socket file descriptor failed");
         exit(EXIT_FAILURE);
     }
 
     // Getting the server IP address via DNS
-    // If hostname is IP address, then IP address will be returned
-    struct hostent *server_host;
-    server_host = gethostbyname(SERVER_HOSTNAME);
-    if(server_host == NULL) {
-        fprintf(stderr,"ERROR, no such host as %s\n", SERVER_HOSTNAME);
+    struct hostent *server_host = gethostbyname(SERVER_HOSTNAME);
+    if (server_host == NULL) {
+        fprintf(stderr, "ERROR, no such host as %s\n", SERVER_HOSTNAME);
         exit(EXIT_FAILURE);
     }
 
     struct sockaddr_in server_address;
     bzero((char *)&server_address, sizeof(server_address)); // Clearing server address
     server_address.sin_family = AF_INET;
-    bcopy(
-        (char*)server_host->h_addr_list[0],
-        (char*)&server_address.sin_addr.s_addr,
-        server_host->h_length
-    );
+    bcopy((char *)server_host->h_addr_list[0], (char *)&server_address.sin_addr.s_addr, server_host->h_length);
     server_address.sin_port = htons(SERVER_PORT);
 
-    char buffer[BUFFER_SIZE] = { 0 };
+    char buffer[BUFFER_SIZE] = {0};
 
     while (1) {
-        // Print menu on client side  
-        printf("\n\n====\n");      
+        // Print menu on client side
+        printf("\n\n====\n");
         printf("Menu\n");
         printf("====\n");
         printf("1. Display Catalog\n");
         printf("2. Search Book\n");
         printf("3. Order Book\n");
+        printf("4. Pay For Book\n");
         printf("\n");
 
         char option[4];
         char params[128];
 
-        while(1) {
+        while (1) {
             printf("Choose Option: ");
             bzero(option, sizeof(option));
             fgets(option, sizeof(option), stdin); // get input
@@ -78,19 +67,19 @@ int main(int argc, char const *argv[]) {
             int isValidNumber = 1;
 
             // Checking if number
-            for(int i = 0; i < strlen(option) - 1; i++) {
-                if(!isdigit(option[i])) {
+            for (int i = 0; i < strlen(option) - 1; i++) {
+                if (!isdigit(option[i])) {
                     isValidNumber = 0;
                 }
             }
 
-            if(!isValidNumber) {
+            if (!isValidNumber) {
                 printf("\nERROR: Please put a number.\n");
                 continue;
             }
 
             // Checking if valid option
-            if(atoi(option) > 3) {
+            if (atoi(option) > 4) {
                 printf("\nERROR: Choose number in the list.\n");
                 continue;
             }
@@ -115,7 +104,7 @@ int main(int argc, char const *argv[]) {
                 fgets(Z, sizeof(Z), stdin);
 
                 // Concatenating into one large string
-                snprintf(params, sizeof(params),"%s%s%s", M, X, Z);
+                snprintf(params, sizeof(params), "%s%s%s", M, X, Z);
                 break;
             case 2:
                 char string[128];
@@ -125,7 +114,7 @@ int main(int argc, char const *argv[]) {
                 fgets(string, sizeof(string), stdin);
 
                 // Concatenating into one large string
-                snprintf(params, sizeof(params),"%s", string);
+                snprintf(params, sizeof(params), "%s", string);
                 break;
             case 3:
                 // get query parameters
@@ -143,7 +132,20 @@ int main(int argc, char const *argv[]) {
                 fgets(n, sizeof(n), stdin);
 
                 // Concatenating into one large string
-                snprintf(params, sizeof(params),"%s%s%s", x, y, n);
+                snprintf(params, sizeof(params), "%s%s%s", x, y, n);
+                break;
+            case 4:
+                char orderno[64];
+                char Amount[64];
+
+                printf("\nOrder Book Catalog Parameters\n");
+                printf("-----------------------------");
+                printf("\norderno: ");
+                fgets(orderno, sizeof(orderno), stdin);
+                printf("Amount: ");
+                fgets(Amount, sizeof(Amount), stdin);
+
+                snprintf(params, sizeof(params), "%s%s", orderno, Amount);
                 break;
             default:
                 break;
@@ -154,28 +156,29 @@ int main(int argc, char const *argv[]) {
         snprintf(buffer, BUFFER_SIZE, "%s%s", option, params);
 
         // send to server
-        if (sendto(client_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
-            perror("ERROR sending to socket");
+        if (sendto(client_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&server_address, sizeof(server_address)) < 0) {
+            perror("ERROR writing to socket");
             exit(EXIT_FAILURE);
         }
 
         // clear buffer
         bzero(buffer, BUFFER_SIZE);
 
+        socklen_t server_length = sizeof(server_address);
         // receive from server
-        socklen_t server_address_length = sizeof(server_address);
-        if (recvfrom(client_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&server_address, &server_address_length) < 0) {
-            perror("ERROR receiving from socket");
+        if (recvfrom(client_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&server_address, &server_length) < 0) {
+            perror("ERROR reading from socket");
             exit(EXIT_FAILURE);
         }
 
-        printf("+++++++\n");
-        printf("RESULTS\n");
-        printf("+++++++\n");
+        printf("+++++++++\n");
+        printf("+RESULTS+\n");
+        printf("+++++++++\n");
         printf("\n%s", buffer);
     }
 
     close(client_fd);
+    free(SERVER_HOSTNAME);
     return 0;
 }
 
