@@ -78,6 +78,7 @@ int main(int argc, char const *argv[]) {
         printf("1. Display Catalog\n");
         printf("2. Search Book\n");
         printf("3. Order Book\n");
+        printf("4. Pay For Book\n");
         printf("\n");
 
         char option[4];
@@ -104,7 +105,7 @@ int main(int argc, char const *argv[]) {
             }
 
             // Checking if valid option
-            if(atoi(option) > 3) {
+            if(atoi(option) > 4) {
                 printf("\nERROR: Choose number in the list.\n");
                 continue;
             }
@@ -160,6 +161,19 @@ int main(int argc, char const *argv[]) {
                 // Concatenating into one large string
                 snprintf(params, sizeof(params),"%s%s%s", x, y, n);
                 break;
+            case 4:
+                char orderno[64];
+                char Amount[64];
+
+                printf("\nOrder Book Catalog Parameters\n");
+                printf("-----------------------------");
+                printf("\norderno: ");
+                fgets(orderno, sizeof(orderno), stdin);
+                printf("Amount: ");
+                fgets(Amount, sizeof(Amount), stdin);
+
+                snprintf(params, sizeof(params),"%s%s", orderno, Amount);
+                break;
             default:
                 break;
         }
@@ -181,9 +195,9 @@ int main(int argc, char const *argv[]) {
             exit(EXIT_FAILURE);
         }
         
-        printf("+++++++\n");
-        printf("RESULTS\n");
-        printf("+++++++\n");
+        printf("+++++++++\n");
+        printf("+RESULTS+\n");
+        printf("+++++++++\n");
         printf("\n%s", buffer);
     }
     

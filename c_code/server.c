@@ -35,7 +35,7 @@
     char* SearchBook(char *string);
     char* DisplayCatalog(int M, int X, int Z);
     char* OrderBook(char *x, char *y, int n);
-
+    char* PayForBook(int orderno, int Amount);
 
     int main(int argc, char const *argv[]) {
         // Get Server Port
@@ -155,6 +155,19 @@
                         response = OrderBook(params3[0], params3[1], atoi(params3[2]));
                         
                         break;
+                    case 4:
+                        char params4[2][64];
+                        int paramIndex4 = 0;
+                        while(token != NULL && paramIndex4 < 2) {
+                            token = strtok(NULL, "\n");
+                            strcpy(params4[paramIndex4], token);    
+                            paramIndex4++;
+                        }
+
+                        // return output to client
+                        response = PayForBook(atoi(params4[0]), atoi(params4[1]));
+
+                        break;
                     default:
                         response = "\nInvalid Option. Try again\n";
                         break;
@@ -260,7 +273,7 @@
         return catalog;
     }
 
-    char* SearchBook(char* string) {
+    char* SearchBook(char* string){
         printf("\nINFO: SearchBook started executing...\n");
         int columnNumber = 1; // 1-indexed
         int bookLineNumber = -1;
@@ -346,7 +359,7 @@
 
         // Get created orders and create new order
         FILE *fptr;
-        int lastOrderNumber, newOrderNumber, lastTotalPrice;
+        int lastOrderNumber = 0, newOrderNumber, lastTotalPrice;
 
         fptr = fopen("created_orders.txt", "a+");
         
@@ -355,11 +368,16 @@
             exit(EXIT_FAILURE);
         }
 
-        // If file empty, 0
-        if(fscanf(fptr, "%d\t%d", &lastOrderNumber, &lastTotalPrice) != 2) {
-            lastOrderNumber = 0;
-        } else {
-            fseek(fptr, 0, SEEK_END);
+        // // If file empty, let stae
+        // if(fscanf(fptr, "%d\t%d", &lastOrderNumber, &lastTotalPrice) != 2) {
+        //     lastOrderNumber = 0;
+        // } else {
+           
+            
+        // }
+        char buffer[256];
+        while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
+            sscanf(buffer, "%d\t%d", &lastOrderNumber, &lastTotalPrice);
         }
 
         newOrderNumber = lastOrderNumber + 1;
@@ -399,11 +417,106 @@
         strcat(response, quantity_string);
         strcat(response, total_price_string);
         
-        
         printf("\nINFO: OrderBook done executing...\n");
         return response;
     }
 
+    char* PayForBook(int orderno, int Amount) {
+        printf("\nINFO: PayForBook started executing...\n");
+        FILE *createdPtr, *paidPtr, *tempPtr;
+        
+        printf("Order number and amount: %d, %d", orderno, Amount);
+
+        char *line = NULL;  
+        char *paidLine = (char*)malloc(128 * sizeof(char));
+        char *response = (char*)malloc(128 * sizeof(char));;
+        size_t lineLength = 0;
+        ssize_t read = 0;
+        int wasOrderCreated = 0;
+
+        createdPtr = fopen("created_orders.txt", "r");
+        if (createdPtr == NULL) {
+            perror("ERROR: Error when opening created_orders.txt");
+            exit(EXIT_FAILURE);
+        }
+
+        paidPtr = fopen("paid_orders.txt", "a");
+        if (paidPtr == NULL) {
+            perror("ERROR: Error when opening paid_orders.txt");
+            exit(EXIT_FAILURE);
+        }
+
+        tempPtr = fopen("temp.txt", "w");
+        if (paidPtr == NULL) {
+            perror("ERROR: Error when opening temp.txt");
+            exit(EXIT_FAILURE);
+        }
+
+        int currentOrderNumber;
+        int currentTotalPrice;
+       
+        int foundAnyOrder = 0;
+        while(getline(&line, &lineLength, createdPtr) != -1) {
+            foundAnyOrder = 1;
+            printf("\nLine found: %s\n", line);
+            if(sscanf(line, "%d\t%d", &currentOrderNumber, &currentTotalPrice) == 2) {
+                printf("\nCurrent Order Number: %d \n", currentOrderNumber);
+                if(currentOrderNumber == orderno) {
+                    printf("\nCurrent Order Number: %d \n", currentOrderNumber);
+                    wasOrderCreated = 1;
+                    strcpy(paidLine, line);
+                    printf("\nOrder %d was created and found\n", orderno);
+                    continue;
+                }
+                fprintf(tempPtr, "%s", line);
+            }
+        }
+
+        if(foundAnyOrder == 0) {
+            sprintf(response, "\nNo orders have been created.\n");
+            printf("\nINFO: PayForBook started executing...\n");
+            remove("temp.txt");
+            return response;
+        }
+
+        fclose(createdPtr);
+        fclose(tempPtr);
+
+         if (wasOrderCreated) {
+            // Check if amount sent is enough,
+            if(Amount >= currentTotalPrice) {
+                // Replace the original file with the temporary file
+                if (remove("created_orders.txt") != 0) {
+                    perror("ERROR: Error deleting original file");
+                    exit(EXIT_FAILURE);
+                } else if (rename("temp.txt", "created_orders.txt") != 0) {
+                    perror("ERROR: Error renaming temporary file");
+                    exit(EXIT_FAILURE);
+                }
+                
+                // Append to file
+                fprintf(paidPtr, "%s", paidLine);
+                fclose(paidPtr);
+                int balance = Amount - currentTotalPrice;
+                sprintf(response, "\nOrder Number: %d.\nPayment Status: SUCCESSFUL.\nAmount Paid: %d\nBalance: %d\n", orderno, Amount, balance);
+                printf("\nINFO: PayForBook started executing...\n");
+                return response;
+            } else {
+                int insufficient = currentTotalPrice - Amount;
+                sprintf(response, "\nOrder Number: %d.\nPayment Status: FAILED(Insufficient Amount).\nAmount Paid: %d\nMoney To Add: %d\n", orderno, Amount, insufficient);
+                printf("\nINFO: PayForBook started executing...\n");
+                return response;
+            }   
+        } else {
+            // No matching order number found, so remove the temporary file
+            remove("temp.txt");
+            
+            sprintf(response, "Order Number: %d.\nPayment Status: FAILED(Invalid Order Number).\n", orderno);
+            printf("\nINFO: PayForBook started executing...\n");
+            return response;
+        }
+        
+    }
     void checkMemoryAllocation(void *ptr) {
         if (ptr == NULL) {
             perror("EEROR: Memory allocation failed");
