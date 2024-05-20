@@ -346,7 +346,8 @@
 
         // Get created orders and create new order
         FILE *fptr;
-        int lastOrderNumber, newOrderNumber;
+        int lastOrderNumber, newOrderNumber, lastTotalPrice;
+
         fptr = fopen("created_orders.txt", "a+");
         
         if(fptr == NULL) {
@@ -355,13 +356,17 @@
         }
 
         // If file empty, 0
-        if(fscanf(fptr, "%d", &lastOrderNumber) != 1) {
+        if(fscanf(fptr, "%d\t%d", &lastOrderNumber, &lastTotalPrice) != 2) {
             lastOrderNumber = 0;
+        } else {
+            fseek(fptr, 0, SEEK_END);
         }
 
         newOrderNumber = lastOrderNumber + 1;
+        lastTotalPrice = price * n;
 
-        fprintf(fptr, "%d\n", newOrderNumber);
+        // Add to file
+        fprintf(fptr, "%d\t%d\n", newOrderNumber, lastTotalPrice);
         fclose(fptr);
 
         char order_number_as_string[64];
@@ -400,10 +405,10 @@
     }
 
     void checkMemoryAllocation(void *ptr) {
-    if (ptr == NULL) {
-        perror("EEROR: Memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
+        if (ptr == NULL) {
+            perror("EEROR: Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
     }
 
 
