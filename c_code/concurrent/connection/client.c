@@ -204,10 +204,12 @@ int main(int argc, char const *argv[])
                 perror("ERROR writing to socket");
                 exit(EXIT_FAILURE);
             }
+
+            
         }
 
         // Close the client socket when done
-        close(client_fd);
+        // close(client_fd);
     }
 
     return 0;

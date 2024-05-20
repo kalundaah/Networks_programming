@@ -134,7 +134,7 @@ int main(int argc, char const *argv[]) {
                 break;
             case 2:
                 char string[128];
-                 printf("\nSearch Book Parameters\n");
+                printf("\nSearch Book Parameters\n");
                 printf("-----------------------------");
                 printf("\nstring: ");
                 fgets(string, sizeof(string), stdin);
