@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.css": "tailwindcss",
+        "*.yml": "yaml",
+        "functional": "c"
+    }
+}
