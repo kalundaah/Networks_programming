@@ -1,0 +1,11 @@
+S/No	Title	Authors	ISBN	Publisher	Date of publication	Price
+1	Zombie Holocaust (a.k.a. Doctor Butcher M.D.) (Zombi Holocaust)	Carlyn	2eXKs1	Quimba	7/9/2019	3395
+2	The Brides of Fu Manchu	Chiquita	3fRX6E	Quatz	7/21/2013	3119
+3	Yank in the R.A.F., A	Abra	6fM1qF	Wikivu	11/17/2011	2295
+4	Big Business	Chaim	9kFfg8	Yacero	1/29/2023	4949
+5	Pelican Brief, The	Launce	1lK3hU	Youopia	5/16/2023	3812
+6	Mystery Street	Artair	0bFdbV	Reallinks	4/13/2019	1084
+7	Bad Boys II	Irwin	9aA6j5	Linklinks	1/25/2014	2630
+8	The Mountain of the Cannibal God	Frans	8kTmt9	Twinte	1/20/2012	2528
+9	Saw II	Belvia	3bXG7R	Chatterpoint	11/10/2022	3364
+10	Man Who Copied, The (Homem Que Copiava, O)	Olympie	7rYQ3Y	Edgepulse	12/29/2011	4119
