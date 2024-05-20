@@ -46,7 +46,7 @@ int main(int argc, char const *argv[])
     int SERVER_PORT = atoi(argv[1]);
 
     // Socket
-    int server_fd = socket(AF_INET, SOCK_DGRAM, 0); // Use SOCK_DGRAM for UDP
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0)
     {
         perror("Creation of server socket file descriptor failed");
@@ -58,19 +58,24 @@ int main(int argc, char const *argv[])
     {
         perror("Setting socket options failed");
         exit(EXIT_FAILURE);
-    }
+    };
 
     struct sockaddr_in server_address;
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = INADDR_ANY;
     server_address.sin_port = htons(SERVER_PORT); // Host to network order
 
-    socklen_t server_socket_address_length = sizeof(server_address);
-
     // Bind
-    if (bind(server_fd, (struct sockaddr *)&server_address, server_socket_address_length) < 0)
+    if (bind(server_fd, (struct sockaddr *)&server_address, sizeof(server_address)) < 0)
     {
         perror("Binding of server socket file descriptor failed");
+        exit(EXIT_FAILURE);
+    };
+
+    // Listen
+    if (listen(server_fd, 5) < 0)
+    { // backlog set to 5
+        perror("Listening on server socket file descriptor failed");
         exit(EXIT_FAILURE);
     }
 
@@ -79,100 +84,116 @@ int main(int argc, char const *argv[])
     // Before entering loop, create data structures
     putBooksInDataStructures();
 
-    // Read from client
-    ssize_t bytes_read_from_client; // ssize is used because negative values might indicate error
-    char buffer[BUFFER_SIZE] = {0};
-
     // Server Logic
     while (1)
     {
         struct sockaddr_in client_address;
         socklen_t client_address_length = sizeof(client_address);
 
-        bzero(buffer, BUFFER_SIZE); // reset buffer
+        // Accept
+        int client_fd = accept(server_fd, (struct sockaddr *)&client_address, &client_address_length);
 
-        // Receive option choice from client
-        bytes_read_from_client = recvfrom(server_fd, buffer, BUFFER_SIZE, 0,
-                                          (struct sockaddr *)&client_address, &client_address_length);
+        // if (client_fd < 0)
+        // {
+        //     perror("Accepting client connection failed");
+        //     continue;
+        // }
 
-        if (bytes_read_from_client < 0)
-        {
-            perror("ERROR: Error reading from client");
-            exit(EXIT_FAILURE);
-        }
+        // Handle each connection in a new process
+        pid_t pid = fork();
+        if (pid == 0)
+        {                     // Child process
+            // close(server_fd); // Child doesn't need the listener
 
-        char *token = strtok(buffer, "\n");
-        int option = atoi(token);
+            // struct sockaddr_in client_address;
+            // socklen_t client_address_length = sizeof(client_address);
 
-        switch (option)
-        {
-        case 1:
-        {
-            int params1[3] = {0};
-            int paramIndex1 = 0;
+            // // Accept
+            // int client_fd = accept(server_fd, (struct sockaddr *)&client_address, &client_address_length);
 
-            while (token != NULL && paramIndex1 < 3)
+
+            char client_ip[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &client_address.sin_addr, client_ip, INET_ADDRSTRLEN);
+            int client_port = ntohs(client_address.sin_port);
+            printf("Client connected from %s:%d\n", client_ip, client_port);
+
+            ssize_t bytes_read_from_client;
+            char buffer[BUFFER_SIZE] = {0};
+
+            // Receive data from the client
+            bytes_read_from_client = read(client_fd, buffer, BUFFER_SIZE);
+            if (bytes_read_from_client < 0)
             {
-                token = strtok(NULL, "\n");
-                params1[paramIndex1] = atoi(token);
-                paramIndex1++;
-            }
-
-            response = DisplayCatalog(params1[0], params1[1], params1[2]);
-            break;
-        }
-        case 2:
-            token = strtok(NULL, "\n");
-            response = SearchBook(token);
-            break;
-        case 3:
-        {
-            char params3[3][64];
-            int paramIndex3 = 0;
-
-            while (token != NULL && paramIndex3 < 3)
-            {
-                token = strtok(NULL, "\n");
-                strcpy(params3[paramIndex3], token);
-                paramIndex3++;
-            }
-
-            response = OrderBook(params3[0], params3[1], atoi(params3[2]));
-            break;
-        }
-        case 4:
-        {
-            char params4[2][64];
-            int paramIndex4 = 0;
-            while (token != NULL && paramIndex4 < 2)
-            {
-                token = strtok(NULL, "\n");
-                strcpy(params4[paramIndex4], token);
-                paramIndex4++;
-            }
-
-            response = PayForBook(atoi(params4[0]), atoi(params4[1]));
-            break;
-        }
-        default:
-            response = "\nInvalid Option. Try again\n";
-            break;
-        }
-
-        if (response != NULL)
-        {
-            if (sendto(server_fd, response, strlen(response), 0,
-                       (struct sockaddr *)&client_address, client_address_length) < 0)
-            {
-                perror("ERROR: Error sending to client");
+                perror("ERROR: Error reading from client");
+                close(client_fd);
                 exit(EXIT_FAILURE);
             }
-            if (response != "\nInvalid Option. Try again\n")
+
+            char *token = strtok(buffer, "\n");
+            int option = atoi(token);
+            switch (option)
             {
-                free(response);
-                response = NULL;
+            case 1:
+            {
+                int params1[3] = {0};
+                int paramIndex1 = 0;
+                while (token != NULL && paramIndex1 < 3)
+                {
+                    token = strtok(NULL, "\n");
+                    params1[paramIndex1] = atoi(token);
+                    paramIndex1++;
+                }
+                response = DisplayCatalog(params1[0], params1[1], params1[2]);
             }
+            break;
+            case 2:
+                token = strtok(NULL, "\n");
+                response = SearchBook(token);
+                break;
+            case 3:
+            {
+                char params3[3][64];
+                int paramIndex3 = 0;
+                while (token != NULL && paramIndex3 < 3)
+                {
+                    token = strtok(NULL, "\n");
+                    strcpy(params3[paramIndex3], token);
+                    paramIndex3++;
+                }
+                response = OrderBook(params3[0], params3[1], atoi(params3[2]));
+            }
+            break;
+            case 4:
+            {
+                char params4[2][64];
+                int paramIndex4 = 0;
+                while (token != NULL && paramIndex4 < 2)
+                {
+                    token = strtok(NULL, "\n");
+                    strcpy(params4[paramIndex4], token);
+                    paramIndex4++;
+                }
+                response = PayForBook(atoi(params4[0]), atoi(params4[1]));
+            }
+            break;
+            default:
+                response = "\nInvalid Option. Try again\n";
+                break;
+            }
+
+            if (response != NULL)
+            {
+                write(client_fd, response, strlen(response));
+                if (response != "\nInvalid Option. Try again\n")
+                {
+                    free(response);
+                    response = NULL;
+                }
+            }
+            close(client_fd);
+            //exit(0);
         }
+        //close(client_fd); // Parent doesn't need this
     }
 
     return 0;

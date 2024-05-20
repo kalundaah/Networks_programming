@@ -1,19 +1,13 @@
-// C
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-// POSIX operating system API - provides the read, write, fork, exit, exec functions
 #include <unistd.h>
-
-// Types
-#include <sys/types.h> // UNIX data types
-#include <sys/socket.h> // Socket related data types
-#include <netinet/in.h> // Internet address family structures and constants
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <ctype.h>
-
 
 #define BUFFER_SIZE 1024
 
@@ -25,22 +19,18 @@ int main(int argc, char const *argv[]) {
         fprintf(stderr, "(Failed) usage: %s <host> <port>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
-    char *SERVER_HOSTNAME;
-    SERVER_HOSTNAME = strdup(argv[1]);
+    char *SERVER_HOSTNAME = strdup(argv[1]);
     int SERVER_PORT = atoi(argv[2]);
 
     // Socket
-    int client_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int client_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if(client_fd < 0) {
         perror("Creation of client socket file descriptor failed");
         exit(EXIT_FAILURE);
     }
 
-    
     // Getting the server IP address via DNS
-    // If hostname is IP address, then IP address will be returned
-    struct hostent *server_host;
-    server_host = gethostbyname(SERVER_HOSTNAME);
+    struct hostent *server_host = gethostbyname(SERVER_HOSTNAME);
     if(server_host == NULL) {
         fprintf(stderr,"ERROR, no such host as %s\n", SERVER_HOSTNAME);
         exit(EXIT_FAILURE);
@@ -56,22 +46,10 @@ int main(int argc, char const *argv[]) {
     );
     server_address.sin_port = htons(SERVER_PORT);
     
-    // Connect
-    if(connect(
-        client_fd,
-        (struct sockaddr*)&server_address,
-        sizeof(server_address)
-    ) < 0) {
-        perror("Connection of client socket file descriptor failed");
-        exit(EXIT_FAILURE);
-    }
+    char buffer[BUFFER_SIZE] = {0};
 
-    char buffer[BUFFER_SIZE] = { 0 };
-
-    int write_read_return;
-
-    while (1) {        
-        // Print menu on client side  
+    while (1) {
+        // Print menu on client side
         printf("\n\n====\n");      
         printf("Menu\n");
         printf("====\n");
@@ -113,8 +91,7 @@ int main(int argc, char const *argv[]) {
             break;
         }
         
-        switch (atoi(option))
-        {
+        switch (atoi(option)) {
             case 1:
                 // get query parameters
                 char M[20];
@@ -144,7 +121,7 @@ int main(int argc, char const *argv[]) {
                 snprintf(params, sizeof(params),"%s", string);
                 break;
             case 3:
-                 // get query parameters
+                // get query parameters
                 char x[20];
                 char y[20];
                 char n[20];
@@ -178,20 +155,24 @@ int main(int argc, char const *argv[]) {
                 break;
         }
 
-         // clear buffer
+        // clear buffer
         bzero(buffer, BUFFER_SIZE);
         snprintf(buffer, BUFFER_SIZE, "%s%s", option, params);
 
         // send to server
-        if (send(client_fd, buffer, BUFFER_SIZE, 0) < 0) {
+        if (sendto(client_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
             perror("ERROR writing to socket");
             exit(EXIT_FAILURE);
         }
+
         // clear buffer
         bzero(buffer, BUFFER_SIZE);
+
         // receive from server
-        if (read(client_fd, buffer, BUFFER_SIZE) < 0) {
-            perror("ERROR writing to socket");
+        struct sockaddr_in from_address;
+        socklen_t from_length = sizeof(from_address);
+        if (recvfrom(client_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&from_address, &from_length) < 0) {
+            perror("ERROR reading from socket");
             exit(EXIT_FAILURE);
         }
         
@@ -202,13 +183,13 @@ int main(int argc, char const *argv[]) {
     }
     
     close(client_fd);
+    free(SERVER_HOSTNAME);
     return 0;
 }
 
-
 void checkMemoryAllocation(void *ptr) {
     if (ptr == NULL) {
-        perror("EEROR: Memory allocation failed");
+        perror("ERROR: Memory allocation failed");
         exit(EXIT_FAILURE);
     }
 }
