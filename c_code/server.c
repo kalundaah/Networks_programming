@@ -261,7 +261,7 @@
         strcat(catalog, books[0]);
 
         // Add books
-        for(int i = upperLimit; i < lowerLimit; i++) {
+        for(int i = upperLimit; i < M+1; i++) {
             // strcpy(catalog + currentPos, books[i]);
             // currentPos += strlen(books[i]) + 1;
             //printf("Adding book[%d]: %s\n", i, books[i]);
