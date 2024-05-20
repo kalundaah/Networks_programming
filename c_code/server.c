@@ -31,6 +31,7 @@
     void checkMemoryAllocation(void *ptr);
     void putBooksInDataStructures();
 
+   
     // Server Interface
     char* SearchBook(char *string);
     char* DisplayCatalog(int M, int X, int Z);
@@ -43,10 +44,14 @@
             fprintf(stderr, "(Failed) usage: %s <port>\n", argv[0]);
             exit(EXIT_FAILURE);
         }
+
+        // Convert port from commandline to an integer
         int SERVER_PORT = atoi(argv[1]);
 
         // Socket
-        int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+        int server_fd = socket(AF_INET, SOCK_STREAM, 0); // Connection-oriented
+        
+        // Error handling when creating a socket fails
         if(server_fd < 0) {
             perror("Creation of server socket file descriptor failed");
             exit(EXIT_FAILURE);
@@ -60,6 +65,7 @@
             exit(EXIT_FAILURE);
         };
 
+        // Defining server socket properties
         struct sockaddr_in server_address;
 
         server_address.sin_family = AF_INET;
@@ -81,8 +87,6 @@
             exit(EXIT_FAILURE);
         }
 
-        printf("Server started at %d\n", SERVER_PORT);
-
         // Before entering loop, create data structures
         putBooksInDataStructures();
 
@@ -102,10 +106,12 @@
             char client_ip[INET_ADDRSTRLEN];
             inet_ntop(AF_INET, &client_address.sin_addr, client_ip, INET_ADDRSTRLEN);
             int client_port = ntohs(client_address.sin_port);
-            printf("Client connected from %s:%d\n", client_ip, client_port);
+            
+            printf("\nServer started at %d\n", SERVER_PORT);
+            printf("\nClient connected from %s:%d\n", client_ip, client_port);
 
             while (1) {
-                bzero(buffer, BUFFER_SIZE); // how to reset buffer
+                bzero(buffer, BUFFER_SIZE); // clear buffer
 
                 // Get option choice from client
                 bytes_read_from_client = recv(client_fd, buffer, BUFFER_SIZE, 0);
@@ -124,7 +130,7 @@
                 
                 switch (option) { 
                     case 1:
-                        int params1[3] = {0};        
+                        int params1[3] = {0};      
                         int paramIndex1 = 0; 
 
                         while(token != NULL && paramIndex1 < 3) {
@@ -137,7 +143,6 @@
                         response = DisplayCatalog(params1[0], params1[1], params1[2]);
                         break;
                     case 2:
-                        // int paramIndex = 0;
                         token = strtok(NULL, "\n");
                         response = SearchBook(token);
                         break;
@@ -241,7 +246,6 @@
             lowerLimit = Z + 1;
         }
 
-
         int catalogLength = 0;
         // Adding header length
         catalogLength += strlen(books[0]) + 1;
@@ -255,18 +259,11 @@
         catalog[0] = '\0';
 
         // Add header
-        // int currentPos = 0;
-        // strcpy(catalog + currentPos, books[0]);
-        // currentPos += strlen(books[0]) + 1;
         strcat(catalog, books[0]);
 
         // Add books
         for(int i = upperLimit; i < M+1; i++) {
-            // strcpy(catalog + currentPos, books[i]);
-            // currentPos += strlen(books[i]) + 1;
-            //printf("Adding book[%d]: %s\n", i, books[i]);
             strcat(catalog, books[i]);
-            //printf("Catalog: %s\n", catalog);
         }
 
         printf("\nINFO: DisplayCatalog done executing...\n");
@@ -307,7 +304,6 @@
             checkMemoryAllocation(result);
             result[0] = '\0';
             strcat(result, "No book found");
-
         } else {
             size_t headerLength = strlen(books[0]);
             size_t bookLength = strlen(books[bookLineNumber]);
@@ -342,7 +338,11 @@
 
         // get book
         char* line = strdup(search_book_response);
+
+        // Extract header
         char* book = strtok(line, "\n");
+
+        // Get book details
         book = strtok(NULL, "\n");
         char *book_field = strtok(book, "\t");
 
@@ -367,14 +367,7 @@
             perror("ERROR: Error when opening created_orders.txt");
             exit(EXIT_FAILURE);
         }
-
-        // // If file empty, let stae
-        // if(fscanf(fptr, "%d\t%d", &lastOrderNumber, &lastTotalPrice) != 2) {
-        //     lastOrderNumber = 0;
-        // } else {
-           
-            
-        // }
+        
         char buffer[256];
         while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
             sscanf(buffer, "%d\t%d", &lastOrderNumber, &lastTotalPrice);
@@ -517,9 +510,10 @@
         }
         
     }
+    
     void checkMemoryAllocation(void *ptr) {
         if (ptr == NULL) {
-            perror("EEROR: Memory allocation failed");
+            perror("ERROR: Memory allocation failed");
             exit(EXIT_FAILURE);
         }
     }
