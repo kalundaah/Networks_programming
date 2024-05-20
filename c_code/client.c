@@ -76,7 +76,9 @@ int main(int argc, char const *argv[]) {
         printf("Menu\n");
         printf("====\n");
         printf("1. Display Catalog\n");
-        printf("2. Search Book\n\n");
+        printf("2. Search Book\n");
+        printf("3. Order Book\n");
+        printf("\n");
 
         char option[4];
         char params[128];
@@ -140,7 +142,24 @@ int main(int argc, char const *argv[]) {
                 // Concatenating into one large string
                 snprintf(params, sizeof(params),"%s", string);
                 break;
-        
+            case 3:
+                 // get query parameters
+                char x[20];
+                char y[20];
+                char n[20];
+                
+                printf("\nOrder Book Catalog Parameters\n");
+                printf("-----------------------------");
+                printf("\nx: ");
+                fgets(x, sizeof(x), stdin);
+                printf("y: ");
+                fgets(y, sizeof(y), stdin);
+                printf("n: ");
+                fgets(n, sizeof(n), stdin);
+
+                // Concatenating into one large string
+                snprintf(params, sizeof(params),"%s%s%s", x, y, n);
+                break;
             default:
                 break;
         }

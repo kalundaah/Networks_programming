@@ -34,6 +34,7 @@
     // Server Interface
     char* SearchBook(char *string);
     char* DisplayCatalog(int M, int X, int Z);
+    char* OrderBook(char *x, char *y, int n);
 
 
     int main(int argc, char const *argv[]) {
@@ -123,24 +124,37 @@
                 
                 switch (option) { 
                     case 1:
-                        int params[3]= {0};        
-                        int paramIndex = 0; 
+                        int params1[3] = {0};        
+                        int paramIndex1 = 0; 
 
-                        while(token != NULL && paramIndex < 3) {
+                        while(token != NULL && paramIndex1 < 3) {
                             token = strtok(NULL, "\n");
-                            params[paramIndex] = atoi(token);    
-                            paramIndex++;
+                            params1[paramIndex1] = atoi(token);    
+                            paramIndex1++;
                         }
 
                         // return output to client
-                        response = DisplayCatalog(params[0], params[1], params[2]);
+                        response = DisplayCatalog(params1[0], params1[1], params1[2]);
                         break;
                     case 2:
                         // int paramIndex = 0;
                         token = strtok(NULL, "\n");
                         response = SearchBook(token);
                         break;
+                    case 3:
+                        char params3[3][64];
+                        int paramIndex3 = 0;
+                        
+                        while(token != NULL && paramIndex3 < 3) {
+                            token = strtok(NULL, "\n");
+                            strcpy(params3[paramIndex3], token);    
+                            paramIndex3++;
+                        }
 
+                        // return output to client
+                        response = OrderBook(params3[0], params3[1], atoi(params3[2]));
+                        
+                        break;
                     default:
                         response = "\nInvalid Option. Try again\n";
                         break;
@@ -296,8 +310,93 @@
 
     }
 
-    char OrderBook() {
+    char* OrderBook(char* x, char* y, int n) {
+        printf("\nINFO: OrderBook started executing...\n");
+        char *search_book_response = SearchBook(x);
+        
+        // if book does not exist,
+        if(strcmp(search_book_response, "No book found") == 0) {
+            free(search_book_response);
+            search_book_response = SearchBook(y);
+            if(strcmp(search_book_response, "No book found") == 0) {
+                return search_book_response;
+            }
+        }
 
+        int columnNumber = 1; // 1-indexed
+        int price;
+
+
+        // get book
+        char* line = strdup(search_book_response);
+        char* book = strtok(line, "\n");
+        book = strtok(NULL, "\n");
+        char *book_field = strtok(book, "\t");
+
+        // Look for price
+        while(book_field != NULL) {
+            if(columnNumber == 7) {
+                price = atoi(book_field);
+                break;
+            }
+
+            book_field = strtok(NULL, "\t");
+            columnNumber++;
+        }
+
+        // Get created orders and create new order
+        FILE *fptr;
+        int lastOrderNumber, newOrderNumber;
+        fptr = fopen("created_orders.txt", "a+");
+        
+        if(fptr == NULL) {
+            perror("ERROR: Error when opening created_orders.txt");
+            exit(EXIT_FAILURE);
+        }
+
+        // If file empty, 0
+        if(fscanf(fptr, "%d", &lastOrderNumber) != 1) {
+            lastOrderNumber = 0;
+        }
+
+        newOrderNumber = lastOrderNumber + 1;
+
+        fprintf(fptr, "%d\n", newOrderNumber);
+        fclose(fptr);
+
+        char order_number_as_string[64];
+        sprintf(order_number_as_string, "\n\nOrder Number: %d\n", newOrderNumber);
+        
+        char unit_price_string[64];
+        sprintf(unit_price_string, "Unit Price: %d\n", price);
+
+        char quantity_string[32];
+        sprintf(quantity_string, "Quantity: %d\n", n);
+
+        char total_price_string[64];
+        sprintf(total_price_string, "Total Price: %d\n", price * n);
+
+        char* response = NULL;
+        int responseLength = strlen(search_book_response) + 1 + 
+            strlen(unit_price_string) + 1 +
+            strlen(quantity_string) + 1 +
+            strlen(total_price_string) + 1 + 
+            strlen(order_number_as_string) + 1;
+
+        response = (char*)malloc(responseLength * sizeof(char));
+        checkMemoryAllocation(response);
+        
+        response[0] = '\0';
+
+        strcat(response, search_book_response);
+        strcat(response, order_number_as_string);
+        strcat(response, unit_price_string);
+        strcat(response, quantity_string);
+        strcat(response, total_price_string);
+        
+        
+        printf("\nINFO: OrderBook done executing...\n");
+        return response;
     }
 
     void checkMemoryAllocation(void *ptr) {
