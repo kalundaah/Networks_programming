@@ -422,7 +422,7 @@
 
         char *line = NULL;  
         char *paidLine = (char*)malloc(128 * sizeof(char));
-        char *response = (char*)malloc(128 * sizeof(char));;
+        char *response = (char*)malloc(128 * sizeof(char));
         size_t lineLength = 0;
         ssize_t read = 0;
         int wasOrderCreated = 0;

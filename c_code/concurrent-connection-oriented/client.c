@@ -197,24 +197,29 @@ int main(int argc, char const *argv[])
 
         bzero(buffer, BUFFER_SIZE);
         
-        int bytes_received = read(client_fd, buffer, BUFFER_SIZE);
-        if (bytes_received < 0)
-        {
-            perror("ERROR reading from socket");
+        // int bytes_received = read(client_fd, buffer, BUFFER_SIZE);
+        // if (bytes_received < 0)
+        // {
+        //     perror("ERROR reading from socket");
+        //     exit(EXIT_FAILURE);
+        // }
+        // else
+        // {
+        //     printf("+++++++\n");
+        //     printf("RESULTS\n");
+        //     printf("+++++++\n");
+        //     printf("\n%s", buffer);
+        // }
+        // receive from server
+        if (read(client_fd, buffer, BUFFER_SIZE) < 0) {
+            perror("ERROR writing to socket");
             exit(EXIT_FAILURE);
         }
-        // else if (bytes_received == 0)
-        // {
-        //     printf("Server closed the connection\n");
-        //     exit(EXIT_SUCCESS);
-        // }
-        else
-        {
-            printf("+++++++\n");
-            printf("RESULTS\n");
-            printf("+++++++\n");
-            printf("\n%s", buffer);
-        }
+        
+        printf("+++++++++\n");
+        printf("+RESULTS+\n");
+        printf("+++++++++\n");
+        printf("\n%s", buffer);
     }
 
 

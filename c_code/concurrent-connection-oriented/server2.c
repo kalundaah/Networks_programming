@@ -92,8 +92,8 @@ int main(int argc, char const *argv[])
 
         // Accept
         int client_fd = accept(server_fd, (struct sockaddr *)&client_address, &client_address_length);
-
-        if (client_fd < 0) {
+        if (client_fd < 0)
+        {
             perror("Accepting client connection failed");
             continue;
         }
@@ -104,23 +104,80 @@ int main(int argc, char const *argv[])
             // Child process
             close(server_fd); // Child doesn't need the listener
 
-            // struct sockaddr_in client_address;
-            // socklen_t client_address_length = sizeof(client_address);
-
-            // // Accept
-            // int client_fd = accept(server_fd, (struct sockaddr *)&client_address, &client_address_length);
-
-
-            char client_ip[INET_ADDRSTRLEN];
-            inet_ntop(AF_INET, &client_address.sin_addr, client_ip, INET_ADDRSTRLEN);
-            int client_port = ntohs(client_address.sin_port);
-            printf("Client connected from %s:%d\n", client_ip, client_port);
+            // char client_ip[INET_ADDRSTRLEN];
+            // inet_ntop(AF_INET, &client_address.sin_addr, client_ip, INET_ADDRSTRLEN);
+            // int client_port = ntohs(client_address.sin_port);
+            // printf("Client connected from %s:%d\n", client_ip, client_port);
 
             ssize_t bytes_read_from_client;
             char buffer[BUFFER_SIZE] = {0};
+            
+            // Update code here
+            while((bytes_read_from_client = read(client_fd, buffer, BUFFER_SIZE)) > 0){
+                char *token = strtok(buffer, "\n");
+                int option = atoi(token);
+                switch (option)
+                {
+                    case 1:
+                        {
+                            int params1[3] = {0};
+                            int paramIndex1 = 0;
+                            while (token != NULL && paramIndex1 < 3)
+                            {
+                                token = strtok(NULL, "\n");
+                                params1[paramIndex1] = atoi(token);
+                                paramIndex1++;
+                            }
+                            response = DisplayCatalog(params1[0], params1[1], params1[2]);
+                        }
+                    break;
+                    case 2:
+                        token = strtok(NULL, "\n");
+                        response = SearchBook(token);
+                        break;
+                    case 3:
+                        {
+                            char params3[3][64];
+                            int paramIndex3 = 0;
+                            while (token != NULL && paramIndex3 < 3)
+                            {
+                                token = strtok(NULL, "\n");
+                                strcpy(params3[paramIndex3], token);
+                                paramIndex3++;
+                            }
+                            response = OrderBook(params3[0], params3[1], atoi(params3[2]));
+                        }
+                        break;
+                    case 4:
+                        {
+                            char params4[2][64];
+                            int paramIndex4 = 0;
+                            while (token != NULL && paramIndex4 < 2)
+                            {
+                                token = strtok(NULL, "\n");
+                                strcpy(params4[paramIndex4], token);
+                                paramIndex4++;
+                            }
+                            response = PayForBook(atoi(params4[0]), atoi(params4[1]));
+                        }
+                        break;
+                    default:
+                        response = "\nInvalid Option. Try again\n";
+                        break;
+            }
 
-            // Receive data from the client
-            bytes_read_from_client = read(client_fd, buffer, BUFFER_SIZE);
+                if (response != NULL)
+                {
+                    write(client_fd, response, strlen(response));
+                    if (response != "\nInvalid Option. Try again\n")
+                    {
+                        free(response);
+                        response = NULL;
+                    }
+                }
+            }
+            
+            
             if (bytes_read_from_client < 0)
             {
                 perror("ERROR: Error reading from client");
@@ -128,75 +185,21 @@ int main(int argc, char const *argv[])
                 exit(EXIT_FAILURE);
             }
 
-            char *token = strtok(buffer, "\n");
-            int option = atoi(token);
-            switch (option)
-            {
-            case 1:
-            {
-                int params1[3] = {0};
-                int paramIndex1 = 0;
-                while (token != NULL && paramIndex1 < 3)
-                {
-                    token = strtok(NULL, "\n");
-                    params1[paramIndex1] = atoi(token);
-                    paramIndex1++;
-                }
-                response = DisplayCatalog(params1[0], params1[1], params1[2]);
-            }
-            break;
-            case 2:
-                token = strtok(NULL, "\n");
-                response = SearchBook(token);
-                break;
-            case 3:
-            {
-                char params3[3][64];
-                int paramIndex3 = 0;
-                while (token != NULL && paramIndex3 < 3)
-                {
-                    token = strtok(NULL, "\n");
-                    strcpy(params3[paramIndex3], token);
-                    paramIndex3++;
-                }
-                response = OrderBook(params3[0], params3[1], atoi(params3[2]));
-            }
-            break;
-            case 4:
-            {
-                char params4[2][64];
-                int paramIndex4 = 0;
-                while (token != NULL && paramIndex4 < 2)
-                {
-                    token = strtok(NULL, "\n");
-                    strcpy(params4[paramIndex4], token);
-                    paramIndex4++;
-                }
-                response = PayForBook(atoi(params4[0]), atoi(params4[1]));
-            }
-            break;
-            default:
-                response = "\nInvalid Option. Try again\n";
-                break;
-            }
+            
 
-            if (response != NULL)
-            {
-                write(client_fd, response, strlen(response));
-                if (response != "\nInvalid Option. Try again\n")
-                {
-                    free(response);
-                    response = NULL;
-                }
-            }
+
+
             close(client_fd);
             exit(0);
+        } else if(pid < 0) {
+            perror("Fork failed");
+            close(client_fd);
         } else {
             close(client_fd);
         }
-        close(client_fd); // Parent doesn't need this
-    }
 
+    }
+    close(server_fd);
     return 0;
 }
 
@@ -288,75 +291,117 @@ char *DisplayCatalog(int M, int X, int Z)
     return catalog;
 }
 
-char *SearchBook(char *string)
-{
-    printf("\nINFO: SearchBook started executing...\n");
-    int columnNumber = 1; // 1-indexed
-    int bookLineNumber = -1;
-    char *result = NULL;
 
-    for (int i = 1; i < numOfBooks; i++)
-    {
-        // Create duplicate to maintain original
-        // strtok modifies original string
-        char *line = strdup(books[i]);
-        char *token = strtok(line, "\t");
-        while (token != NULL)
-        {
-            if (columnNumber == 2 || columnNumber == 4)
-            {
-                if (strcmp(string, token) == 0)
-                {
-                    bookLineNumber = i;
+char* SearchBook(char* string){
+        printf("\nINFO: SearchBook started executing...\n");
+        int columnNumber = 1; // 1-indexed
+        int bookLineNumber = -1;
+        char *result = NULL;
+
+        for(int i = 1; i < numOfBooks; i++) {
+            // Create duplicate to maintain original
+            // strtok modifies original string
+            char* line = strdup(books[i]);
+            char* token = strtok(line, "\t");
+            while(token != NULL) {
+                if(columnNumber == 2 || columnNumber == 4) {
+                    if(strcmp(string, token) == 0) {
+                        bookLineNumber = i;
+                    }
                 }
-            }
 
-            if (bookLineNumber != -1)
-            {
-                break;
+                if (bookLineNumber != -1) {
+                    break;
+                }
+                token = strtok(NULL, "\t");
+                columnNumber++;
             }
-            token = strtok(NULL, "\t");
-            columnNumber++;
+            
+            // Reset Column Number
+            columnNumber = 1;
         }
 
-        // Reset Column Number
-        columnNumber = 1;
-    }
+        if(bookLineNumber == -1) {
+            result =  (char*)malloc((strlen("No book found") + 1) * sizeof(char));
+            checkMemoryAllocation(result);
+            result[0] = '\0';
+            strcat(result, "No book found");
+        } else {
+            size_t headerLength = strlen(books[0]);
+            size_t bookLength = strlen(books[bookLineNumber]);
 
-    if (bookLineNumber == -1)
-    {
-        result = (char *)malloc((strlen("No book found") + 1) * sizeof(char));
-        checkMemoryAllocation(result);
-        result[0] = '\0';
-        strcat(result, "No book found");
-    }
-    else
-    {
-        size_t headerLength = strlen(books[0]);
-        size_t bookLength = strlen(books[bookLineNumber]);
+            result = (char*)malloc((headerLength + bookLength + 2) * sizeof(char));
+            checkMemoryAllocation(result);
+            result[0] = '\0';
+            strcat(result, books[0]);
+            strcat(result, books[bookLineNumber]);
+        }
+        printf("\nINFO: SearchBook done executing...\n");
+        return result;
 
-        result = (char *)malloc((headerLength + bookLength + 2) * sizeof(char));
-        checkMemoryAllocation(result);
-        result[0] = '\0';
-        strcat(result, books[0]);
-        strcat(result, books[bookLineNumber]);
     }
-    printf("\nINFO: SearchBook done executing...\n");
-    return result;
-}
+// char *OrderBook(char *x, char *y, int n)
+// {
+//     printf("\nINFO: OrderBook started executing...\n");
+//     srand(time(0));
+//     int random_order_number = rand() % 10000;
 
-char *OrderBook(char *x, char *y, int n)
-{
+//     int columnNumber = 1; // 1-indexed
+//     int bookLineNumber = -1;
+//     char *response = NULL;
+
+//     for (int i = 1; i < numOfBooks; i++)
+//     {
+//         // Create duplicate to maintain original
+//         // strtok modifies original string
+//         char *line = strdup(books[i]);
+//         char *token = strtok(line, "\t");
+//         while (token != NULL)
+//         {
+//             if (columnNumber == 2 || columnNumber == 4)
+//             {
+//                 if (strcmp(x, token) == 0)
+//                 {
+//                     if (strcmp(y, token) == 0)
+//                     {
+//                         bookLineNumber = i;
+//                     }
+//                 }
+//             }
+
+//             if (bookLineNumber != -1)
+//             {
+//                 break;
+//             }
+//             token = strtok(NULL, "\t");
+//             columnNumber++;
+//         }
+//         if (bookLineNumber != -1)
+//         {
+//             response = strdup("\nBook is out of stock\n");
+//             break;
+//         }
+//     }
+
+//     if (bookLineNumber == -1)
+//     {
+//         char orderDetails[128];
+//         snprintf(orderDetails, sizeof(orderDetails), "\nOrder successful\nOrder number: %d\nQuantity: %d\n", random_order_number, n);
+//         response = strdup(orderDetails);
+//     }
+
+//     printf("\nINFO: OrderBook done executing...\n");
+//     return response;
+// }
+char* OrderBook(char* x, char* y, int n) {
     printf("\nINFO: OrderBook started executing...\n");
     char *search_book_response = SearchBook(x);
-
+    
     // if book does not exist,
-    if (strcmp(search_book_response, "No book found") == 0)
-    {
+    if(strcmp(search_book_response, "No book found") == 0) {
         free(search_book_response);
         search_book_response = SearchBook(y);
-        if (strcmp(search_book_response, "No book found") == 0)
-        {
+        if(strcmp(search_book_response, "No book found") == 0) {
             return search_book_response;
         }
     }
@@ -364,21 +409,20 @@ char *OrderBook(char *x, char *y, int n)
     int columnNumber = 1; // 1-indexed
     int price;
 
+
     // get book
-    char *line = strdup(search_book_response);
+    char* line = strdup(search_book_response);
 
     // Extract header
-    char *book = strtok(line, "\n");
+    char* book = strtok(line, "\n");
 
     // Get book details
     book = strtok(NULL, "\n");
     char *book_field = strtok(book, "\t");
 
     // Look for price
-    while (book_field != NULL)
-    {
-        if (columnNumber == 7)
-        {
+    while(book_field != NULL) {
+        if(columnNumber == 7) {
             price = atoi(book_field);
             break;
         }
@@ -392,16 +436,14 @@ char *OrderBook(char *x, char *y, int n)
     int lastOrderNumber = 0, newOrderNumber, lastTotalPrice;
 
     fptr = fopen("created_orders.txt", "a+");
-
-    if (fptr == NULL)
-    {
+    
+    if(fptr == NULL) {
         perror("ERROR: Error when opening created_orders.txt");
         exit(EXIT_FAILURE);
     }
-
+    
     char buffer[256];
-    while (fgets(buffer, sizeof(buffer), fptr) != NULL)
-    {
+    while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         sscanf(buffer, "%d\t%d", &lastOrderNumber, &lastTotalPrice);
     }
 
@@ -414,7 +456,7 @@ char *OrderBook(char *x, char *y, int n)
 
     char order_number_as_string[64];
     sprintf(order_number_as_string, "\n\nOrder Number: %d\n", newOrderNumber);
-
+    
     char unit_price_string[64];
     sprintf(unit_price_string, "Unit Price: %d\n", price);
 
@@ -424,16 +466,16 @@ char *OrderBook(char *x, char *y, int n)
     char total_price_string[64];
     sprintf(total_price_string, "Total Price: %d\n", price * n);
 
-    char *response = NULL;
-    int responseLength = strlen(search_book_response) + 1 +
-                         strlen(unit_price_string) + 1 +
-                         strlen(quantity_string) + 1 +
-                         strlen(total_price_string) + 1 +
-                         strlen(order_number_as_string) + 1;
+    char* response = NULL;
+    int responseLength = strlen(search_book_response) + 1 + 
+        strlen(unit_price_string) + 1 +
+        strlen(quantity_string) + 1 +
+        strlen(total_price_string) + 1 + 
+        strlen(order_number_as_string) + 1;
 
-    response = (char *)malloc(responseLength * sizeof(char));
+    response = (char*)malloc(responseLength * sizeof(char));
     checkMemoryAllocation(response);
-
+    
     response[0] = '\0';
 
     strcat(response, search_book_response);
@@ -441,60 +483,61 @@ char *OrderBook(char *x, char *y, int n)
     strcat(response, unit_price_string);
     strcat(response, quantity_string);
     strcat(response, total_price_string);
-
+    
     printf("\nINFO: OrderBook done executing...\n");
     return response;
 }
 
-char *PayForBook(int orderno, int Amount)
-{
+// char *PayForBook(int orderno, int Amount)
+// {
+//     printf("\nINFO: PayForBook started executing...\n");
+//     char paymentDetails[128];
+//     snprintf(paymentDetails, sizeof(paymentDetails), "\nPayment successful\nOrder number: %d\nAmount: %d\n", orderno, Amount);
+//     char *response = strdup(paymentDetails);
+//     printf("\nINFO: PayForBook done executing...\n");
+//     return response;
+// }
+char* PayForBook(int orderno, int Amount) {
     printf("\nINFO: PayForBook started executing...\n");
     FILE *createdPtr, *paidPtr, *tempPtr;
-
+    
     printf("Order number and amount: %d, %d", orderno, Amount);
 
-    char *line = NULL;
-    char *paidLine = (char *)malloc(128 * sizeof(char));
-    char *response = (char *)malloc(128 * sizeof(char));
-    ;
+    char *line = NULL;  
+    char *paidLine = (char*)malloc(128 * sizeof(char));
+    char *response = (char*)malloc(128 * sizeof(char));
     size_t lineLength = 0;
     ssize_t read = 0;
     int wasOrderCreated = 0;
 
     createdPtr = fopen("created_orders.txt", "r");
-    if (createdPtr == NULL)
-    {
+    if (createdPtr == NULL) {
         perror("ERROR: Error when opening created_orders.txt");
         exit(EXIT_FAILURE);
     }
 
     paidPtr = fopen("paid_orders.txt", "a");
-    if (paidPtr == NULL)
-    {
+    if (paidPtr == NULL) {
         perror("ERROR: Error when opening paid_orders.txt");
         exit(EXIT_FAILURE);
     }
 
     tempPtr = fopen("temp.txt", "w");
-    if (paidPtr == NULL)
-    {
+    if (paidPtr == NULL) {
         perror("ERROR: Error when opening temp.txt");
         exit(EXIT_FAILURE);
     }
 
     int currentOrderNumber;
     int currentTotalPrice;
-
+    
     int foundAnyOrder = 0;
-    while (getline(&line, &lineLength, createdPtr) != -1)
-    {
+    while(getline(&line, &lineLength, createdPtr) != -1) {
         foundAnyOrder = 1;
         printf("\nLine found: %s\n", line);
-        if (sscanf(line, "%d\t%d", &currentOrderNumber, &currentTotalPrice) == 2)
-        {
+        if(sscanf(line, "%d\t%d", &currentOrderNumber, &currentTotalPrice) == 2) {
             printf("\nCurrent Order Number: %d \n", currentOrderNumber);
-            if (currentOrderNumber == orderno)
-            {
+            if(currentOrderNumber == orderno) {
                 printf("\nCurrent Order Number: %d \n", currentOrderNumber);
                 wasOrderCreated = 1;
                 strcpy(paidLine, line);
@@ -505,8 +548,7 @@ char *PayForBook(int orderno, int Amount)
         }
     }
 
-    if (foundAnyOrder == 0)
-    {
+    if(foundAnyOrder == 0) {
         sprintf(response, "\nNo orders have been created.\n");
         printf("\nINFO: PayForBook started executing...\n");
         remove("temp.txt");
@@ -516,23 +558,18 @@ char *PayForBook(int orderno, int Amount)
     fclose(createdPtr);
     fclose(tempPtr);
 
-    if (wasOrderCreated)
-    {
+        if (wasOrderCreated) {
         // Check if amount sent is enough,
-        if (Amount >= currentTotalPrice)
-        {
+        if(Amount >= currentTotalPrice) {
             // Replace the original file with the temporary file
-            if (remove("created_orders.txt") != 0)
-            {
+            if (remove("created_orders.txt") != 0) {
                 perror("ERROR: Error deleting original file");
                 exit(EXIT_FAILURE);
-            }
-            else if (rename("temp.txt", "created_orders.txt") != 0)
-            {
+            } else if (rename("temp.txt", "created_orders.txt") != 0) {
                 perror("ERROR: Error renaming temporary file");
                 exit(EXIT_FAILURE);
             }
-
+            
             // Append to file
             fprintf(paidPtr, "%s", paidLine);
             fclose(paidPtr);
@@ -540,31 +577,27 @@ char *PayForBook(int orderno, int Amount)
             sprintf(response, "\nOrder Number: %d.\nPayment Status: SUCCESSFUL.\nAmount Paid: %d\nBalance: %d\n", orderno, Amount, balance);
             printf("\nINFO: PayForBook started executing...\n");
             return response;
-        }
-        else
-        {
+        } else {
             int insufficient = currentTotalPrice - Amount;
             sprintf(response, "\nOrder Number: %d.\nPayment Status: FAILED(Insufficient Amount).\nAmount Paid: %d\nMoney To Add: %d\n", orderno, Amount, insufficient);
             printf("\nINFO: PayForBook started executing...\n");
             return response;
-        }
-    }
-    else
-    {
+        }   
+    } else {
         // No matching order number found, so remove the temporary file
         remove("temp.txt");
-
+        
         sprintf(response, "Order Number: %d.\nPayment Status: FAILED(Invalid Order Number).\n", orderno);
         printf("\nINFO: PayForBook started executing...\n");
         return response;
-    }
+    }    
 }
 
 void checkMemoryAllocation(void *ptr)
 {
     if (ptr == NULL)
     {
-        perror("ERROR: Memory allocation failed");
+        perror("\nERROR: Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
 }
