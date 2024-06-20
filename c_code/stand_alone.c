@@ -1,6 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+#include <unistd.h>
 #include <math.h>
 
+void checkMemoryAllocation(void *ptr);
 void showMenu() {
     printf("Select an operation to perform on two integers:\n");
     printf("1. Addition\n");
@@ -61,4 +65,13 @@ int main() {
     printf("The final result is: %f\n", result);
 
     return 0;
+}
+
+void checkMemoryAllocation(void *ptr)
+{
+    if (ptr == NULL)
+    {
+        perror("\nERROR: Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
 }

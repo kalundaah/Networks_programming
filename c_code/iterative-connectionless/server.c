@@ -178,12 +178,14 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
+// Putting books in data structures
 void putBooksInDataStructures()
 {
     // Open file
     FILE *fptr;
     fptr = fopen("books2.txt", "r");
 
+    // Error handling if file did not open
     if (fptr == NULL)
     {
         perror("\nERROR: The file has not opened");
@@ -191,23 +193,34 @@ void putBooksInDataStructures()
     }
     else
     {
+        // File opened successfully
         printf("\nINFO: File opened successfully\n");
+        // Temporary book storage for one book
         char *book = NULL;
         size_t lineSize = 0;
         int bookIndex = 0;
 
+        // Read the file line by line looking at each book and storing it in the books array
         while (getline(&book, &lineSize, fptr) != -1)
         {
+            // Increase total number of books
             numOfBooks++;
+            // Reallocate memory for books
             books = (char **)realloc(books, (numOfBooks + 1) * sizeof(char *));
+            // Error checking
             checkMemoryAllocation(books);
+            // Set book index
             bookIndex = numOfBooks - 1;
+            // Allocate memory for new book coming in
             books[bookIndex] = (char *)malloc((strlen(book) + 1) * sizeof(char));
+            // Error checking
             checkMemoryAllocation(books[bookIndex]);
+            // Copy book to books array
             strcpy(books[bookIndex], book);
         }
 
         printf("\nINFO: Data successfully read from file\n");
+        // Free pointers
         free(book);
         fclose(fptr);
         printf("\nINFO: The file is now closed.\n");

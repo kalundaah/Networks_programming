@@ -29,12 +29,14 @@ size_t numOfBooks = 0;
 void checkMemoryAllocation(void *ptr);
 void putBooksInDataStructures();
 
+// Putting books in data structures
 void putBooksInDataStructures()
 {
     // Open file
     FILE *fptr;
     fptr = fopen("books2.txt", "r");
 
+    // Error handling if file did not open
     if (fptr == NULL)
     {
         perror("\nERROR: The file has not opened");
@@ -42,23 +44,34 @@ void putBooksInDataStructures()
     }
     else
     {
+        // File opened successfully
         printf("\nINFO: File opened successfully\n");
+        // Temporary book storage for one book
         char *book = NULL;
         size_t lineSize = 0;
         int bookIndex = 0;
 
+        // Read the file line by line looking at each book and storing it in the books array
         while (getline(&book, &lineSize, fptr) != -1)
         {
+            // Increase total number of books
             numOfBooks++;
+            // Reallocate memory for books
             books = (char **)realloc(books, (numOfBooks + 1) * sizeof(char *));
+            // Error checking
             checkMemoryAllocation(books);
+            // Set book index
             bookIndex = numOfBooks - 1;
+            // Allocate memory for new book coming in
             books[bookIndex] = (char *)malloc((strlen(book) + 1) * sizeof(char));
+            // Error checking
             checkMemoryAllocation(books[bookIndex]);
+            // Copy book to books array
             strcpy(books[bookIndex], book);
         }
 
         printf("\nINFO: Data successfully read from file\n");
+        // Free pointers
         free(book);
         fclose(fptr);
         printf("\nINFO: The file is now closed.\n");
@@ -395,73 +408,82 @@ int main()
     char *response;
 
     char params[128];
-    
+
     scanf("%d", &option);
 
     switch (option)
     {
     case 1:
-                // get query parameters
-                char M[20];
-                char X[20];
-                char Z[20];
+        // get query parameters
+        char M[20];
+        char X[20];
+        char Z[20];
 
-                printf("\nDisplay Catalog Parameters\n");
-                printf("-----------------------------");
-                printf("\nM: ");
-                fgets(M, sizeof(M), stdin);
-                printf("X: ");
-                fgets(X, sizeof(X), stdin);
-                printf("Z: ");
-                fgets(Z, sizeof(Z), stdin);
+        printf("\nDisplay Catalog Parameters\n");
+        printf("-----------------------------");
+        printf("\nM: ");
+        fgets(M, sizeof(M), stdin);
+        printf("X: ");
+        fgets(X, sizeof(X), stdin);
+        printf("Z: ");
+        fgets(Z, sizeof(Z), stdin);
 
-                // Concatenating into one large string
-                snprintf(params, sizeof(params), "%s%s%s", M, X, Z);
-                break;
-            case 2:
-                char string[128];
-                printf("\nSearch Book Parameters\n");
-                printf("-----------------------------");
-                printf("\nstring: ");
-                fgets(string, sizeof(string), stdin);
+        // Concatenating into one large string
+        snprintf(params, sizeof(params), "%s%s%s", M, X, Z);
+        break;
+    case 2:
+        char string[128];
+        printf("\nSearch Book Parameters\n");
+        printf("-----------------------------");
+        printf("\nstring: ");
+        fgets(string, sizeof(string), stdin);
 
-                // Concatenating into one large string
-                snprintf(params, sizeof(params), "%s", string);
-                break;
-            case 3:
-                // get query parameters
-                char x[20];
-                char y[20];
-                char n[20];
+        // Concatenating into one large string
+        snprintf(params, sizeof(params), "%s", string);
+        break;
+    case 3:
+        // get query parameters
+        char x[20];
+        char y[20];
+        char n[20];
 
-                printf("\nOrder Book Catalog Parameters\n");
-                printf("-----------------------------");
-                printf("\nx: ");
-                fgets(x, sizeof(x), stdin);
-                printf("y: ");
-                fgets(y, sizeof(y), stdin);
-                printf("n: ");
-                fgets(n, sizeof(n), stdin);
+        printf("\nOrder Book Catalog Parameters\n");
+        printf("-----------------------------");
+        printf("\nx: ");
+        fgets(x, sizeof(x), stdin);
+        printf("y: ");
+        fgets(y, sizeof(y), stdin);
+        printf("n: ");
+        fgets(n, sizeof(n), stdin);
 
-                // Concatenating into one large string
-                snprintf(params, sizeof(params), "%s%s%s", x, y, n);
-                break;
-            case 4:
-                char orderno[64];
-                char Amount[64];
+        // Concatenating into one large string
+        snprintf(params, sizeof(params), "%s%s%s", x, y, n);
+        break;
+    case 4:
+        char orderno[64];
+        char Amount[64];
 
-                printf("\nOrder Book Catalog Parameters\n");
-                printf("-----------------------------");
-                printf("\norderno: ");
-                fgets(orderno, sizeof(orderno), stdin);
-                printf("Amount: ");
-                fgets(Amount, sizeof(Amount), stdin);
+        printf("\nOrder Book Catalog Parameters\n");
+        printf("-----------------------------");
+        printf("\norderno: ");
+        fgets(orderno, sizeof(orderno), stdin);
+        printf("Amount: ");
+        fgets(Amount, sizeof(Amount), stdin);
 
-                snprintf(params, sizeof(params), "%s%s", orderno, Amount);
-                break;
-            default:
-                break;
+        snprintf(params, sizeof(params), "%s%s", orderno, Amount);
+        break;
+    default:
+        break;
     }
 
     return 0;
+}
+
+void checkMemoryAllocation(void *ptr)
+{
+    if (ptr == NULL)
+    {
+        perror("\nERROR: Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
 }
