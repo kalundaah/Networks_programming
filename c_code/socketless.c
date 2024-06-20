@@ -80,11 +80,15 @@ void putBooksInDataStructures()
 
 char *DisplayCatalog(int M, int X, int Z)
 {
+    // M is max
+    // X is lower limit
+    // Z is upper limit
     printf("\nINFO: DisplayCatalog started executing...\n");
 
     int upperLimit;
     int lowerLimit;
 
+    // Error handling
     if (X < 1)
     {
         upperLimit = 1;
